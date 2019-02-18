@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.sql.*;
 
+
 public class SocketHandler extends Thread {
 
     private Socket income;
@@ -19,7 +20,7 @@ public class SocketHandler extends Thread {
     public void run() {
 
         try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost/lockedapp?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "1234");
+            con = DriverManager.getConnection("jdbc:mysql://10.0.0.30/lockedapp?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "1234");
             System.out.println("SQL connected");
 
             BufferedReader breader = new BufferedReader(new InputStreamReader(income.getInputStream()));
@@ -82,14 +83,15 @@ public class SocketHandler extends Thread {
             ResultSet rs = stm.executeQuery(query);
             String result = "";
             while (rs.next()) {
+                    result+='!';
                 for (int i = 1; i < 5; i++) {
                     result += rs.getString(i);
                     if (i < 4)
                         result+=",";
                 }
-                result+="!";
             }
-            System.out.println("2 --> " + result);
+            //java.nio.charset.StandardCharsets.UTF_8.encode(result)
+            System.out.println(result);
             out_msg= new DataOutputStream(income.getOutputStream());
          //   out_msg.writeBytes(result + "\n");
             out_msg.writeUTF(result);
